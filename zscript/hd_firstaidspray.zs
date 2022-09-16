@@ -180,7 +180,7 @@ class HDFirstAidSprayer :HDWoundFixer{
 			else 
 
 			if(invoker.weaponstatus[MEDSPRAY_SECONDFLESH]<1){
-				A_WeaponMessage("You are out of Auto-Sutures.");
+				A_WeaponMessage("You are out of first aid spray.");
 				setweaponstate("nope");
 			}else setweaponstate("fireother");
 			return;
@@ -223,7 +223,7 @@ class HDFirstAidSprayer :HDWoundFixer{
 
 				//act upon flesh
 				if(invoker.weaponstatus[MEDSPRAY_SECONDFLESH]<1){
-					A_WeaponMessage("You are out of Auto-Sutures.");
+					A_WeaponMessage("You are out of first aid spray.");
 					setweaponstate("nope");
 					return;
 				}
@@ -432,7 +432,7 @@ class HDFirstAidSprayer :HDWoundFixer{
 		TNT1 A 10;
 		TNT1 A 0{
 			if(invoker.weaponstatus[MEDSPRAY_SECONDFLESH]<1){
-				A_WeaponMessage("You are out of Auto-Sutures.");
+				A_WeaponMessage("You are out of first aid spray.");
 				setweaponstate("nope");
 				return;
 			}
