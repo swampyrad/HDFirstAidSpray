@@ -1,0 +1,17 @@
+sprite FCANA0, 14, 41
+{
+	offset 7, 41
+	patch FCANA0,0,0
+}
+
+sprite FCANB0, 14, 41
+{
+	offset 7, 41
+	patch FCANA0,0,0
+}
+
+sprite FCANC0, 14, 41
+{
+	offset 7, 41
+	patch FCANA0,0,0
+}
