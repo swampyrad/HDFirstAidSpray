@@ -1,17 +1,17 @@
-sprite FCANA0, 14, 41
+sprite FAIDA0, 14, 41
 {
 	offset 7, 41
-	patch FCANA0,0,0
+	patch FAIDA0,0,0
 }
 
-sprite FCANB0, 14, 41
+sprite FAID0, 14, 41
 {
 	offset 7, 41
-	patch FCANA0,0,0
+	patch FAIDA0,0,0
 }
 
-sprite FCANC0, 14, 41
+sprite FAIDC0, 14, 41
 {
 	offset 7, 41
-	patch FCANA0,0,0
+	patch FAIDA0,0,0
 }
