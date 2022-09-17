@@ -4,7 +4,7 @@ sprite FAIDA0, 14, 41
 	patch FAIDA0,0,0
 }
 
-sprite FAID0, 14, 41
+sprite FAIDB0, 14, 41
 {
 	offset 7, 41
 	patch FAIDA0,0,0
