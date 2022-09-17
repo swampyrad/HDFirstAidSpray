@@ -532,7 +532,6 @@ class HDFirstAidSprayer :HDWoundFixer{
 		
 		}wait;
 	}
-	}
 
 	override string pickupmessage(){
 		if(weaponstatus[MEDSPRAY_SECONDFLESH]<FIRSTAID_MAXFLESH)return "Picked up a used can of first aid spray.";
