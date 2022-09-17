@@ -63,7 +63,7 @@ class HDFirstAidSprayer :HDWoundFixer{
 	}
 
 	override string,double getpickupsprite(){
-		return (if(invoker.weaponstatus[MEDSPRAY_SECONDFLESH]<1)?"FAIDC0":"FAIDB0",0.6;)
+		return (weaponstatus[MEDSPRAY_SECONDFLESH]<1)?"FAIDC0":"FAIDB0",0.6;
 	}
 
 	string patientname;
