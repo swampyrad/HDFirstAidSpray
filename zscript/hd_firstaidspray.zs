@@ -63,7 +63,7 @@ class HDFirstAidSprayer :HDWoundFixer{
 	}
 
 	override string,double getpickupsprite(){
-		return (weaponstatus[MEDS_USEDON]<0)?"FCANB0":"FCANC0",0.6;
+		return ( invoker.weaponstatus[MEDSPRAY_SECONDFLESH]<1 )?"FAIDC0":"FAIDB0",0.6;
 	}
 
 	string patientname;
@@ -521,13 +521,17 @@ class HDFirstAidSprayer :HDWoundFixer{
 		goto nope;
 
 	spawn:
-		FCAN B -1 nodelay
+		FAID B -1 nodelay
 		{
 			
 		if(invoker.weaponstatus[MEDSPRAY_USEDON]>=0)
 			frame=1;
-		}
-		wait;
+			
+		if(invoker.weaponstatus[MEDSPRAY_SECONDFLESH]<1)
+			angle+=random(-12,12);pitch=random(45,90);
+		
+		}wait;
+	}
 	}
 
 	override string pickupmessage(){
