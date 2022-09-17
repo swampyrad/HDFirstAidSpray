@@ -521,16 +521,9 @@ class HDFirstAidSprayer :HDWoundFixer{
 		goto nope;
 
 	spawn:
-		FAID B -1 nodelay
-		{
-			
-		if(invoker.weaponstatus[MEDSPRAY_USEDON]>=0)
-			frame=1;
-			
-		if(invoker.weaponstatus[MEDSPRAY_SECONDFLESH]<1)
-			angle+=random(-12,12);pitch=random(45,90);
-		
-		}wait;
+		FAID B -1 A_JumpIf(!invoker.weaponstatus[MEDSPRAY_SECONDFLESH]>0,1);
+		FAID C -1;
+		wait;
 	}
 
 	override string pickupmessage(){
