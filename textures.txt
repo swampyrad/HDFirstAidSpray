@@ -10,8 +10,8 @@ sprite FAIDB0, 14, 41
 	patch FAIDA0,0,0
 }
 
-sprite FAIDC0, 14, 41
+sprite FAIDC0, 41, 14
 {
-	offset 7, 41
-	patch FAIDA0,0,0
+	offset 20, 14
+	patch FAIDC0,0,0
 }
