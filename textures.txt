@@ -1,17 +1,20 @@
-sprite FAIDA0, 14, 41
+// First Aid Spray sprites by Ac!d from
+// the Hideous Destructor Discord server
+
+sprite FAIDA0, 11, 27
 {
-	offset 7, 41
+	offset 5, 27
 	patch FAIDA0,0,0
 }
 
-sprite FAIDB0, 14, 41
+sprite FAIDB0, 11, 27
 {
-	offset 7, 41
+	offset 5, 27
 	patch FAIDA0,0,0
 }
 
-sprite FAIDC0, 41, 14
+sprite FAIDC0, 27, 11
 {
-	offset 20, 14
+	offset 13, 11
 	patch FAIDC0,0,0
 }
