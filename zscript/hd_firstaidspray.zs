@@ -20,9 +20,9 @@ class FirstAid_Spawner : EventHandler
 override void CheckReplacement(ReplaceEvent e) {
 	switch (e.Replacee.GetClassName()) {
 
-  	case 'BlueFrag' 			: if (!random(0, 11)) {e.Replacement = "HDFirstAidSprayer";} break;
-  	case 'HelmFrag' 			: if (!random(0, 15)) {e.Replacement = "HDFirstAidSprayer";} break;
-  	case 'Stimpack' 			: if (!random(0, 15)) {e.Replacement = "HDFirstAidSprayer";} break;
+  	case 'BlueFrag' 			: if (!random(0, 11)) {e.Replacement = "HDFirstAidSpray";} break;
+  	case 'HelmFrag' 			: if (!random(0, 15)) {e.Replacement = "HDFirstAidSpray";} break;
+  	case 'Stimpack' 			: if (!random(0, 15)) {e.Replacement = "HDFirstAidSpray";} break;
 
 		}
 
@@ -30,7 +30,7 @@ override void CheckReplacement(ReplaceEvent e) {
 	}
 }
 
-class HDFirstAidSprayer :HDWoundFixer{
+class HDFirstAidSpray :HDWoundFixer{
 	override bool AddSpareWeapon(actor newowner){return AddSpareWeaponRegular(newowner);}
 	override hdweapon GetSpareWeapon(actor newowner,bool reverse,bool doselect){return GetSpareWeaponRegular(newowner,reverse,doselect);}
 	default{
@@ -45,6 +45,7 @@ class HDFirstAidSprayer :HDWoundFixer{
 		-nointeraction
 		weapon.selectionorder 1001;
 		weapon.slotnumber 9;
+		weapon.slotpriority 0.5;
 		scale 0.3;
 		tag "First Aid Spray";
 		hdweapon.refid "aid";
@@ -69,7 +70,7 @@ class HDFirstAidSprayer :HDWoundFixer{
 	string patientname;
 
 	override void DrawHUDStuff(HDStatusBar sb,HDWeapon hdw,HDPlayerPawn hpl){
-		let ww=HDFirstAidSprayer(hdw);
+		let ww=HDFirstAidSpray(hdw);
 		int of=0;
 		let bwnd=hdbleedingwound.findbiggest(hpl);
 	
