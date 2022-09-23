@@ -1,20 +1,32 @@
 // First Aid Spray sprites by Ac!d from
 // the Hideous Destructor Discord server
 
+//pickup sprites
 sprite FAIDA0, 11, 27
-{
-	offset 5, 27
-	patch FAIDA0,0,0
-}
-
-sprite FAIDB0, 11, 27
-{
+{   
 	offset 5, 27
 	patch FAIDA0,0,0
 }
 
 sprite FAIDC0, 27, 11
 {
+	offset 13, 11
+	patch FAIDC0,0,0
+}
+
+//HUD icon sprites
+sprite FAIDB0, 11, 27
+{
+    xscale 1.6
+    yscale 1.6
+	offset 5, 27
+	patch FAIDA0,0,0
+}
+
+sprite FAIDD0, 27, 11
+{
+    xscale 1.6
+    yscale 1.6
 	offset 13, 11
 	patch FAIDC0,0,0
 }
