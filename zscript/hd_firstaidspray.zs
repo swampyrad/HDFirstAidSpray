@@ -20,9 +20,9 @@ class FirstAid_Spawner : EventHandler
 override void CheckReplacement(ReplaceEvent e) {
 	switch (e.Replacee.GetClassName()) {
 
-  	case 'BlueFrag' 			: if (!random(0, 11)) {e.Replacement = "HDFirstAidSpray";} break;
-  	case 'HelmFrag' 			: if (!random(0, 15)) {e.Replacement = "HDFirstAidSpray";} break;
-  	case 'Stimpack' 			: if (!random(0, 15)) {e.Replacement = "HDFirstAidSpray";} break;
+  	case 'BlueFrag' 			: if (!random(0, 19)) {e.Replacement = "HDFirstAidSpray";} break;
+  	case 'HelmFrag' 			: if (!random(0, 19)) {e.Replacement = "HDFirstAidSpray";} break;
+  	case 'Stimpack' 			: if (!random(0, 19)) {e.Replacement = "HDFirstAidSpray";} break;
 
 		}
 
@@ -34,7 +34,7 @@ class HDFirstAidSpray :HDWoundFixer{
 	override bool AddSpareWeapon(actor newowner){return AddSpareWeaponRegular(newowner);}
 	override hdweapon GetSpareWeapon(actor newowner,bool reverse,bool doselect){return GetSpareWeaponRegular(newowner,reverse,doselect);}
 	default{
-		-weapon.no_auto_switch
+		+weapon.no_auto_switch
 		+hdweapon.fitsinbackpack
 		
 		-weapon.cheatnotweapon
@@ -46,7 +46,8 @@ class HDFirstAidSpray :HDWoundFixer{
 		weapon.selectionorder 1001;
 		weapon.slotnumber 9;
 		weapon.slotpriority 0.5;
-		scale 0.3;
+		inventory.icon "FAIDB0";
+		scale 0.4;
 		tag "First Aid Spray";
 		hdweapon.refid "aid";
 
@@ -60,11 +61,11 @@ class HDFirstAidSpray :HDWoundFixer{
 	}
 
 	override double weaponbulk(){
-		return ENC_MEDIKIT/3;
-	}
+		return ENC_MEDIKIT/4+weaponstatus[MEDSPRAY_SECONDFLESH];
+	}//it weighs less the more you use it
 
 	override string,double getpickupsprite(){
-		return (weaponstatus[MEDSPRAY_SECONDFLESH]<1)?"FAIDC0":"FAIDB0",0.6;
+		return (weaponstatus[MEDSPRAY_SECONDFLESH]<1)?"FAIDD0":"FAIDB0",1;
 	}
 
 	string patientname;
@@ -73,16 +74,6 @@ class HDFirstAidSpray :HDWoundFixer{
 		let ww=HDFirstAidSpray(hdw);
 		int of=0;
 		let bwnd=hdbleedingwound.findbiggest(hpl);
-	
-/*	
-		if(
-			bwnd
-			&&(weaponstatus[MEDSPRAY_USEDON]<0||weaponstatus[MEDSPRAY_USEDON]==hpl.playernumber())
-		){
-			of=clamp(int(bwnd.width*0.1),1,3);
-			if(hpl.flip)of=-of;
-		}
-*/
 
 		sb.drawrect(-29,-17+of,2,6);
 		sb.drawrect(-31,-15+of,6,2);
@@ -100,19 +91,13 @@ class HDFirstAidSpray :HDWoundFixer{
 				:patientname
 			;
 
-/*
-			sb.DrawString(sb.psmallfont,pn,(-53,-8),
-				sb.DI_SCREEN_CENTER_BOTTOM|sb.DI_ITEM_RIGHT|sb.DI_TEXT_ALIGN_RIGHT,
-				Font.CR_RED,scale:(0.3,0.5)
-			);
-*/
-
 			sb.drawimage(
 				"BLUDB0",(-7,-12),
 				sb.DI_SCREEN_CENTER_BOTTOM|sb.DI_ITEM_VCENTER|sb.DI_ITEM_RIGHT,
 				0.2+min(0.4,0.01*ww.weaponstatus[MEDSPRAY_BLOOD]),scale:(1.5,1.5)*(1+0.02*ww.weaponstatus[MEDSPRAY_BLOOD])
 			);
 		}
+
 
 		int btn=hpl.player.cmd.buttons;
 
@@ -150,13 +135,6 @@ class HDFirstAidSpray :HDWoundFixer{
 		A_WeaponReady(WRF_NOFIRE|WRF_ALLOWUSER1|WRF_ALLOWUSER3);
 		if(!player)return;
 		int bt=player.cmd.buttons;
-
-/*
-		if(
-			invoker.icon==invoker.default.icon
-			&&invoker.weaponstatus[MEDSPRAY_USEDON]>=0
-		)invoker.icon=texman.checkfortexture("BLUDIKIT",TexMan.Type_MiscPatch);
-*/
 
 		//don't do the other stuff if holding reload
 		//LET THE RELOAD STATE HANDLE EVERYTHING ELSE
@@ -249,6 +227,7 @@ class HDFirstAidSpray :HDWoundFixer{
 			}
 		}
 		invoker.bwimpy_weapon=true;
+		/*
 		int mbl=invoker.weaponstatus[MEDSPRAY_BLOOD];
 		if(mbl>random(5,64)){
 			invoker.weaponstatus[MEDSPRAY_BLOOD]--;
@@ -258,6 +237,7 @@ class HDFirstAidSpray :HDWoundFixer{
 				flags:SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION
 			);
 		}
+		*/
 	}
 	states{
 	select:
@@ -270,25 +250,21 @@ class HDFirstAidSpray :HDWoundFixer{
 		TNT1 A 1 A_FirstAidReady();
 		goto readyend;
 	flashstaple:
-		TNT1 A 1{
-			A_StartSound("firstaidcan/spray",CHAN_WEAPON);
-			//A_StartSound("misc/bulletflesh",CHAN_BODY,CHANF_OVERLAP);
-			invoker.weaponstatus[MEDSPRAY_BLOOD]+=random(0,2);
-			if(hdplayerpawn(self)){
-				HDF.Give(self,"SecondFlesh",1);
-			}else givebody(3);
-		}goto flashend;
+	TNT1 A 1{
+		        A_StartSound("firstaidcan/spray",CHAN_WEAPON);
+			    if(hdplayerpawn(self)){
+			    	HDF.Give(self,"SecondFlesh",1);
+			    }else givebody(3);
+		    }goto flashend;
 	flashnail:
 		TNT1 A 1{
-			A_StartSound("firstaidcan/spray",CHAN_WEAPON,CHANF_OVERLAP);
-			//A_StartSound("misc/bulletflesh",CHAN_BODY,CHANF_OVERLAP);
-			invoker.weaponstatus[MEDSPRAY_BLOOD]+=random(1,2);
-		}goto flashend;
+		    	A_StartSound("firstaidcan/spray",CHAN_WEAPON,CHANF_OVERLAP);
+    		    }goto flashend;
 	flashend:
 		TNT1 A 1{
 			givebody(1);
 			damagemobj(invoker,self,1,"staples");
-			//A_ZoomRecoil(0.9);
+			
 			A_ChangeVelocity(frandom(-0.2,0.03),frandom(-0.2,0.2),0.4,CVF_RELATIVE);
 		}
 		stop;
@@ -296,6 +272,7 @@ class HDFirstAidSpray :HDWoundFixer{
 	althold:
 	fireother:
 		//TNT1 A 0 A_JumpIf(pressingfiremode()&&!pressingzoom(),"diagnoseother");
+		
 		TNT1 A 10{
 			flinetracedata mediline;
 			linetrace(
@@ -342,14 +319,7 @@ class HDFirstAidSpray :HDWoundFixer{
 					return resolvestate("nope");
 				}
 			}
-			if(
-				patient.player
-				&&invoker.weaponstatus[MEDSPRAY_USEDON]>=0
-				&&invoker.weaponstatus[MEDSPRAY_USEDON]!=patient.playernumber()
-			){
-			//if(DoHelpText(patient))HDWeapon.ForceWeaponMessage(patient,string.format("Run away!\n\n%s is trying to stab you\n\nwith a used syringe!!!",player.getusername()));
-			//if(DoHelpText())A_WeaponMessage("Why are you coating your teammate\n\nin second flesh!?");
-			}else if(IsMoving.Count(patient)>4){
+			if(IsMoving.Count(patient)>4){
 				if(DoHelpText(patient))HDWeapon.ForceWeaponMessage(patient,string.format("%s is trying to use first aid spray on you.\nStay still to let them or tell them to leave...",player.getusername()));
 				if(DoHelpText())A_WeaponMessage("You'll need them to stay still...");
 				return resolvestate("nope");
@@ -384,23 +354,20 @@ class HDFirstAidSpray :HDWoundFixer{
 			return resolvestate("patchupother");
 		}goto nope;
 	patchupother:
-		TNT1 A 0{
-			if(
-				invoker.target
-				&&invoker.target.player
-			)invoker.weaponstatus[MEDSPRAY_USEDON]=invoker.target.playernumber();
-			else invoker.weaponstatus[MEDSPRAY_USEDON]=FIRSTAID_NOTAPLAYER;
-			invoker.patientname=invoker.target.gettag();
-		}
 		TNT1 A 0 A_JumpIf(pressingzoom(),"patchburnsother");
 		TNT1 A 10{
 			invoker.weaponstatus[MEDSPRAY_SECONDFLESH]--;
 			if(invoker.target){
 				invoker.target.A_StartSound("firstaidcan/spray",CHAN_WEAPON,CHANF_OVERLAP);
-				//invoker.target.A_StartSound("misc/bulletflesh",CHAN_BODY,CHANF_OVERLAP);
 			}
 		}
+		
+		//this is where the stapler injection stuff happens
+		//the number of frame calls indicate the number of times
+		//the stapler sutures and treats wounds
+        
 		TNT1 AAAAA 3{
+		
 			let itg=invoker.target;
 			
 			if(
@@ -414,13 +381,17 @@ class HDFirstAidSpray :HDWoundFixer{
 				return;
 			}
 			A_StartSound("firstaidcan/spray",CHAN_WEAPON);
-			invoker.weaponstatus[MEDSPRAY_BLOOD]+=random(0,1);
-
+			
 			itg.A_StartSound("misc/smallslop",CHAN_BODY,CHANF_OVERLAP);
 			if(!random(0,3))invoker.setstatelabel("patchupend");
 			itg.givebody(1);
 			itg.damagemobj(invoker,null,1,"staples",DMG_FORCED);
 
+			//here is where the medikit heals the wounds
+			//by givng the treated player SecondFlesh
+			//this injector could be modified to give a player
+			//other items instead
+			
 			if(hdplayerpawn(itg)){
 				HDF.Give(itg,"SecondFlesh",1);
 			}else{
@@ -437,11 +408,10 @@ class HDFirstAidSpray :HDWoundFixer{
 				setweaponstate("nope");
 				return;
 			}
-			invoker.weaponstatus[MEDSPRAY_USEDON]=playernumber();
 			invoker.weaponstatus[MEDSPRAY_SECONDFLESH]--;
 		}
 		TNT1 A 10 A_Overlay(3,"flashnail");
-		TNT1 AAAAA random(4,5){
+		TNT1 AAAAA 3{
 			invoker.target=self;
 			A_Overlay(3,"flashstaple");
 			if(!random(0,3))invoker.setstatelabel("patchupend");
@@ -480,26 +450,17 @@ class HDFirstAidSpray :HDWoundFixer{
 		TNT1 A 0 A_ClearRefire();
 		goto ready;
 	patchdone:
-		TNT1 A 4;
-		TNT1 A 4 A_StartSound("firstaidcan/spray",CHAN_WEAPON,CHANF_OVERLAP);
-		TNT1 A 3 A_SpawnItemEx(bloodtype,
-			frandom(0,3),frandom(-0.3,0.3)*radius,
-			height*frandom(0.,0.3),
-			flags:SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION
-		);
-		TNT1 A 2;
+		TNT1 A 13 A_StartSound("firstaidcan/spray",CHAN_WEAPON,CHANF_OVERLAP);
 		goto nope;
 	patchburns:
 		TNT1 A 6;
 		TNT1 A 8{
 			if(!HDPlayerPawn(self))return;
-			invoker.weaponstatus[MEDSPRAY_BLOOD]+=random(1,2);
-			invoker.weaponstatus[MEDSPRAY_USEDON]=playernumber();
+
 			int fleshgive=min(FIRSTAID_FLESHGIVE,invoker.weaponstatus[MEDSPRAY_SECONDFLESH]);
 			invoker.weaponstatus[MEDSPRAY_SECONDFLESH]-=fleshgive;
 			A_StartSound("firstaidcan/spray",CHAN_WEAPON);
-			//A_StartSound("misc/bulletflesh",CHAN_BODY,CHANF_OVERLAP);
-			//A_StartSound("misc/smallslop",CHAN_BODY,CHANF_OVERLAP);
+		
 			actor a=spawn("SecondFleshBeast",pos,ALLOW_REPLACE);
 			a.target=self;
 			a.stamina=fleshgive;
@@ -508,12 +469,10 @@ class HDFirstAidSpray :HDWoundFixer{
 	patchburnsother:
 		TNT1 A 10{
 			if(invoker.target){
-				invoker.weaponstatus[MEDSPRAY_BLOOD]+=random(1,2);
 				int fleshgive=min(FIRSTAID_FLESHGIVE,invoker.weaponstatus[MEDSPRAY_SECONDFLESH]);
 				invoker.weaponstatus[MEDSPRAY_SECONDFLESH]-=fleshgive;
 				invoker.target.A_StartSound("firstaidcan/spray",CHAN_WEAPON);
-				//invoker.target.A_StartSound("misc/bulletflesh",CHAN_BODY,CHANF_OVERLAP);
-				//invoker.target.A_StartSound("misc/smallslop",CHAN_BODY,CHANF_OVERLAP);
+
 				actor a=spawn("SecondFleshBeast",invoker.target.pos,ALLOW_REPLACE);
 				a.target=invoker.target;
 				a.stamina=fleshgive;
@@ -522,7 +481,7 @@ class HDFirstAidSpray :HDWoundFixer{
 		goto nope;
 
 	spawn:
-		FAID B -1 A_JumpIf(!invoker.weaponstatus[MEDSPRAY_SECONDFLESH]>0,1);
+		FAID A -1 A_JumpIf(!invoker.weaponstatus[MEDSPRAY_SECONDFLESH]>0,1);
 		FAID C -1;
 		wait;
 	}
